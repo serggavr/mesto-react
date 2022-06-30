@@ -5,7 +5,8 @@ export default function PopupWithForm({
                                         title,
                                         isOpen,
                                         onClose,
-                                        children
+                                        children,
+                                        buttonText
                                       }) {
   return (
 
@@ -21,12 +22,13 @@ export default function PopupWithForm({
             action="#"
             className="popup__form"
             name={name}
-            noValidate
+            // noValidate
           >
             <h2 className="popup__title">{title}</h2>
 
             {children}
 
+            <input type="submit" className="popup__button" value={buttonText}/>
           </form>
         </div>
       </div>

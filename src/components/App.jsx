@@ -34,7 +34,7 @@ export default function App() {
     setIsEditAvatarPopupOpen(false)
     setIsEditProfilePopupOpen(false)
     setIsAddPlacePopupOpen(false)
-    setSelectedCard(false)
+    setSelectedCard({name: '', link: ''})
   }
 
   return (
@@ -55,6 +55,7 @@ export default function App() {
         onClose={closeAllPopups}
         name={"edit-profile"}
         title={"Редактировать профиль"}
+        buttonText={"Сохранить"}
       >
         <input
           data-input="name-input"
@@ -66,7 +67,10 @@ export default function App() {
           minLength="2"
           maxLength="40"
         />
-        <span className="popup__error" data-input="name-input-error"></span>
+        <span
+          className="popup__error"
+          data-input="name-input-error"
+        ></span>
         <input
           data-input="description-input"
           type="text"
@@ -81,7 +85,6 @@ export default function App() {
           className="popup__error"
           data-input="description-input-error"
         ></span>
-        <input type="submit" className="popup__button" value="Сохранить"/>
       </ PopupWithForm>
 
       <PopupWithForm
@@ -89,6 +92,7 @@ export default function App() {
         onClose={closeAllPopups}
         name={"update-avatar"}
         title={"Обновить аватар"}
+        buttonText={"Сохранить"}
       >
         <input
           data-input="avatar-link-input"
@@ -98,9 +102,10 @@ export default function App() {
           required
           placeholder="Ссылка на новый аватар"
         />
-        <span className="popup__error" data-input="avatar-link-input-error">
-          </span>
-        <input type="submit" className="popup__button" value="Сохранить"/>
+        <span
+          className="popup__error"
+          data-input="avatar-link-input-error"
+        ></span>
       </PopupWithForm>
 
       <PopupWithForm
@@ -108,6 +113,7 @@ export default function App() {
         onClose={closeAllPopups}
         name={"add-element-card"}
         title={"Новое место"}
+        buttonText={"Создать"}
       >
         <input
           data-input="card-name-input"
@@ -119,7 +125,10 @@ export default function App() {
           minLength="2"
           maxLength="30"
         />
-        <span className="popup__error" data-input="card-name-input-error"></span>
+        <span
+          className="popup__error"
+          data-input="card-name-input-error"
+        ></span>
         <input
           data-input="image-link-input"
           type="url"
@@ -128,10 +137,12 @@ export default function App() {
           required
           placeholder="Ссылка на картинку"
         />
-        <span className="popup__error" data-input="image-link-input-error">
-          </span>
-        <input type="submit" className="popup__button" value="Создать"/>
+        <span
+          className="popup__error"
+          data-input="image-link-input-error"
+        ></span>
       </PopupWithForm>
+
     <PopupWithForm
       isOpen={false}
       onClose={closeAllPopups}

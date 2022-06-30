@@ -65,9 +65,9 @@ export default function Main({
       <section className="elements section">
         <ul className="elements__list">
 
-          {cards.map((card, i) => {
+          {cards.map((card,) => {
             return (
-                <Card Card={card} key={i} onCardClick={onCardClick}/>
+                <Card card={card} key={card._id} onCardClick={onCardClick}/>
             )
           })}
 

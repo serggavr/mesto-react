@@ -1,32 +1,33 @@
 import React from 'react';
 
 export default function Card({
-                Card,
+                card,
                 onCardClick
               })
 {
 
   function handleClick() {
-    onCardClick(Card);
+    onCardClick(card);
   }
 
   return (
-    <li className="element" onClick={handleClick}>
+    <li className="element">
       <img
-        src={Card.link}
-        alt={Card.name}
+        src={card.link}
+        alt={card.name}
         className="element__photo"
+        onClick={handleClick}
       />
       <button className="element__delete-btn"></button>
       <div className="element__title-block">
-        <h2 className="element__title">{Card.name}</h2>
+        <h2 className="element__title">{card.name}</h2>
         <div className="element__likes-wrapper">
           <button
             className="element__like"
             type="button"
             aria-label="Нравится"
           ></button>
-          <span className="element__likes-counter">{Card.likes.length}</span>
+          <span className="element__likes-counter">{card.likes.length}</span>
         </div>
       </div>
     </li>
