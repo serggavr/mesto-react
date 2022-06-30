@@ -7,20 +7,20 @@ export default function ImagePopup({
 {
 
  return (
-    <div className={`popup popup_type_element-overview ${card && `popup_opened`}`}>
+    <div className={`popup popup_type_element-overview ${card.link && `popup_opened`}`}>
       <div className="popup__container popup__container_placed_element-overview">
         <button
           className="popup__close-button"
           type="button"
           aria-label="Закрыть"
-          onClick={card ? onClose : undefined}
+          onClick={onClose}
         ></button>
         <figure className="overview">
           <img
             className="overview__image"
-            src={card ? card.link : undefined}
-            alt={card ? card.name : undefined}/>
-          <figcaption className="overview__caption">{card ? card.name : undefined}</figcaption>
+            src={card.link}
+            alt={card.name}/>
+          <figcaption className="overview__caption">{card.name}</figcaption>
         </figure>
       </div>
     </div>
