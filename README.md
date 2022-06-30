@@ -4,7 +4,7 @@
 
 ---
 
-### Проект: Место-Рефкт
+### Проект: Место-Реaкт
 
 [Ссылка на Github Pages](https://serggavr.github.io/mesto/)
 
