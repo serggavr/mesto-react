@@ -43,14 +43,24 @@ export default function App() {
     }
   }
 
+  const handleCloseWithClickOnOverlay = (event) => {
+    if (event.target.className.includes('popup_opened')) {
+      closeAllPopups()
+    }
+  }
+
   React.useEffect(() => {
     if (isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen || selectedCard.link) {
       document.addEventListener('keydown', handleCloseWithPushEscButton)
+      document.addEventListener('click', handleCloseWithClickOnOverlay)
       return () => {
         document.removeEventListener('keydown', handleCloseWithPushEscButton)
+        document.removeEventListener('click', handleCloseWithClickOnOverlay)
       }
     }
   })
+
+ 
 
   return (
     <div className="body">
