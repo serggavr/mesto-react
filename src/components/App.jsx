@@ -37,6 +37,21 @@ export default function App() {
     setSelectedCard({name: '', link: ''})
   }
 
+  const handleCloseWithPushEscButton = (event) => {
+    if (event.keyCode === 27) {
+      closeAllPopups()
+    }
+  }
+
+  React.useEffect(() => {
+    if (isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen || selectedCard.link) {
+      document.addEventListener('keydown', handleCloseWithPushEscButton)
+      return () => {
+        document.removeEventListener('keydown', handleCloseWithPushEscButton)
+      }
+    }
+  })
+
   return (
     <div className="body">
       <div className="page">

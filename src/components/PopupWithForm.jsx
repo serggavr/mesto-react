@@ -8,6 +8,8 @@ export default function PopupWithForm({
                                         children,
                                         buttonText
                                       }) {
+
+
   return (
 
       <div className={`popup popup_type_${name} ${isOpen && `popup_opened`}`}>
