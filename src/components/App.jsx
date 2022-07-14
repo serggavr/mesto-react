@@ -6,6 +6,9 @@ import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import Footer from "./Footer"
+import Api from '../utils/Api'
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import EditProfilePopup from "./EditProfilePopup";
 
 export default function App() {
 
@@ -13,6 +16,15 @@ export default function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false)
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false)
   const [selectedCard, setSelectedCard] = React.useState({name: '', link: ''})
+  const [currentUser, setCurrentUser] = React.useState({})
+
+  React.useEffect(() => {
+    Api.getUser()
+    .then((info) => {
+      setCurrentUser(info)
+    })
+    .catch(err => console.log(err))
+  }, [])
 
   const handleCardClick = (card) => {
     setSelectedCard(card)
@@ -49,6 +61,16 @@ export default function App() {
     }
   }
 
+  const handleUpdateUser = (newUserData) => {
+    // console.log({newName: newUserData.name, newAbout: newUserData.about})
+    Api.setUser({newName: newUserData.name, newAbout: newUserData.about})
+    .then(res => {
+      setCurrentUser(res)
+      closeAllPopups()
+    })
+    .catch(err => console.log(err))
+  }
+
   React.useEffect(() => {
     if (isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen || selectedCard.link) {
       document.addEventListener('keydown', handleCloseWithPushEscButton)
@@ -61,10 +83,11 @@ export default function App() {
   })
 
  
-
   return (
     <div className="body">
+      <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
+        
         <Header />
         <Main
           onEditProfile={handleEditProfileClick}
@@ -73,44 +96,17 @@ export default function App() {
           onCardClick={handleCardClick}
         />
         <Footer />
+        
       </div>
 
-      <PopupWithForm
+      <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
-        name={"edit-profile"}
-        title={"Редактировать профиль"}
-        buttonText={"Сохранить"}
-      >
-        <input
-          data-input="name-input"
-          type="text"
-          className="popup__input popup__input_type_username"
-          name="popup__input_type_username"
-          required
-          placeholder="Имя"
-          minLength="2"
-          maxLength="40"
-        />
-        <span
-          className="popup__error"
-          data-input="name-input-error"
-        ></span>
-        <input
-          data-input="description-input"
-          type="text"
-          className="popup__input popup__input_type_description"
-          name="popup__input_type_description"
-          required
-          placeholder="О себе"
-          minLength="2"
-          maxLength="200"
-        />
-        <span
-          className="popup__error"
-          data-input="description-input-error"
-        ></span>
-      </ PopupWithForm>
+        onUpdateUser={handleUpdateUser}
+        // name={"edit-profile"}
+        // title={"Редактировать профиль"}
+        // buttonText={"Сохранить"}
+      />
 
       <PopupWithForm
         isOpen={isEditAvatarPopupOpen}
@@ -185,6 +181,7 @@ export default function App() {
       card={selectedCard}
       onClose={closeAllPopups}
     />
+    </CurrentUserContext.Provider>
   </div>
   );
 }

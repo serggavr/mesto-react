@@ -6,7 +6,8 @@ export default function PopupWithForm({
                                         isOpen,
                                         onClose,
                                         children,
-                                        buttonText
+                                        buttonText,
+                                        onSubmit
                                       }) {
 
 
@@ -24,6 +25,7 @@ export default function PopupWithForm({
             action="#"
             className="popup__form"
             name={name}
+            onSubmit={onSubmit}
             // noValidate
           >
             <h2 className="popup__title">{title}</h2>

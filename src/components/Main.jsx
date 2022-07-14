@@ -1,6 +1,7 @@
 import React from 'react';
 import api from '../utils/Api'
 import Card from './Card'
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 export default function Main({
                 onEditAvatar,
@@ -10,24 +11,54 @@ export default function Main({
               })
 {
 
-  const [userName, setUserName] = React.useState('')
-  const [userDescription, setUserDescription] = React.useState('')
-  const [userAvatar, setUserAvatar] = React.useState('')
+  // const [userName, setUserName] = React.useState('')
+  // const [userDescription, setUserDescription] = React.useState('')
+  // const [userAvatar, setUserAvatar] = React.useState('')
   const [cards, setCards] = React.useState([])
+  const currentUser = React.useContext(CurrentUserContext)
 
   React.useEffect(() => {
-    Promise.all([
-      api.getUser(),
       api.getCards()
-    ])
-      .then(([info, cards]) => {
+      .then((cards) => {
         setCards(cards)
-        setUserName(info.name)
-        setUserDescription(info.about)
-        setUserAvatar(info.avatar)
       })
       .catch(err => console.log(err))
   },[])
+
+  React.useEffect(() => {
+    setCards(cards)
+  }, [cards] )
+
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(like => like._id === currentUser._id);
+    if (isLiked) {
+      api.dislikeCard(card._id)
+      .then(res => {
+        // const newCardsState = [...cards ]
+        // newCardsState[cards.indexOf(card)] = {...res}
+        // setCards(newCardsState)
+        setCards((state) => state.map((c) => c._id === card._id ? res: c))
+      })
+      .catch(err => console.log(err))
+    } else {
+      api.likeCard(card._id)
+      .then(res => {
+        // const newCardsState = [...cards ]
+        // newCardsState[cards.indexOf(card)] = {...res}
+        // setCards(newCardsState)
+        setCards((state) => state.map((c) => c._id === card._id ? res: c))
+      })
+      .catch(err => console.log(err))
+    }
+  }
+
+  function handleCardDelete(card) {
+    api.deleteCard(card._id)
+    .then(res => {
+      setCards((state) => state.filter((c) => c._id !== card._id))
+    })
+    .catch(err => console.log(err))
+  }
 
 
   return (
@@ -35,7 +66,7 @@ export default function Main({
       <section className="profile section">
         <div className="profile__avatar-wrapper">
           <img
-            src={userAvatar}
+            src={currentUser.avatar}
             alt="Аватар пользователя"
             className="profile__avatar"/>
           <button
@@ -45,7 +76,7 @@ export default function Main({
         </div>
         <div className="profile__info">
           <div className="profile__title-block">
-            <h1 className="profile__title">{userName}</h1>
+            <h1 className="profile__title">{currentUser.name}</h1>
             <button
               className="profile__change-button"
               type="button"
@@ -53,7 +84,7 @@ export default function Main({
               onClick={onEditProfile}
             ></button>
           </div>
-          <p className="profile__subtitle">{userDescription}</p>
+          <p className="profile__subtitle">{currentUser.about}</p>
         </div>
         <button
           className="profile__add-button"
@@ -65,9 +96,9 @@ export default function Main({
       <section className="elements section">
         <ul className="elements__list">
 
-          {cards.map((card,) => {
+          {cards.map((card) => {
             return (
-                <Card card={card} key={card._id} onCardClick={onCardClick}/>
+                <Card card={card} key={card._id} onCardClick={onCardClick} onCardLike={handleCardLike} onCardDelete={handleCardDelete}/>
             )
           })}
 
