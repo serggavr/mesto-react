@@ -9,6 +9,8 @@ import Footer from "./Footer"
 import Api from '../utils/Api'
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
+import AddPlacePopup from "./AddPlacePopup";
 
 export default function App() {
 
@@ -17,6 +19,7 @@ export default function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false)
   const [selectedCard, setSelectedCard] = React.useState({name: '', link: ''})
   const [currentUser, setCurrentUser] = React.useState({})
+  const [cards, setCards] = React.useState([])
 
   React.useEffect(() => {
     Api.getUser()
@@ -25,6 +28,49 @@ export default function App() {
     })
     .catch(err => console.log(err))
   }, [])
+
+  React.useEffect(() => {
+    Api.getCards()
+    .then((cards) => {
+      setCards(cards)
+    })
+    .catch(err => console.log(err))
+},[])
+
+React.useEffect(() => {
+  setCards(cards)
+}, [cards] )
+
+function handleCardLike(card) {
+  const isLiked = card.likes.some(like => like._id === currentUser._id);
+  if (isLiked) {
+    Api.dislikeCard(card._id)
+    .then(res => {
+      // const newCardsState = [...cards ]
+      // newCardsState[cards.indexOf(card)] = {...res}
+      // setCards(newCardsState)
+      setCards((state) => state.map((c) => c._id === card._id ? res: c))
+    })
+    .catch(err => console.log(err))
+  } else {
+    Api.likeCard(card._id)
+    .then(res => {
+      // const newCardsState = [...cards ]
+      // newCardsState[cards.indexOf(card)] = {...res}
+      // setCards(newCardsState)
+      setCards((state) => state.map((c) => c._id === card._id ? res: c))
+    })
+    .catch(err => console.log(err))
+  }
+}
+
+function handleCardDelete(card) {
+  Api.deleteCard(card._id)
+  .then(res => {
+    setCards((state) => state.filter((c) => c._id !== card._id))
+  })
+  .catch(err => console.log(err))
+}
 
   const handleCardClick = (card) => {
     setSelectedCard(card)
@@ -62,10 +108,27 @@ export default function App() {
   }
 
   const handleUpdateUser = (newUserData) => {
-    // console.log({newName: newUserData.name, newAbout: newUserData.about})
     Api.setUser({newName: newUserData.name, newAbout: newUserData.about})
     .then(res => {
       setCurrentUser(res)
+      closeAllPopups()
+    })
+    .catch(err => console.log(err))
+  }
+
+  const handleUpdateAvatar = (userAvatarSrc) => {
+    Api.setUserAvatar(userAvatarSrc)
+    .then(res => {
+      setCurrentUser(res)
+      closeAllPopups()
+    })
+    .catch(err => console.log(err))
+  }
+
+  const handleAddPlaceSubmit = (newCard) => {
+    Api.setCard(newCard)
+    .then(res => {
+      setCards([res, ...cards])
       closeAllPopups()
     })
     .catch(err => console.log(err))
@@ -94,75 +157,30 @@ export default function App() {
           onAddPlace={handleAddPlaceClick}
           onEditAvatar={handleEditAvatarClick}
           onCardClick={handleCardClick}
+          cards={cards}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
         />
         <Footer />
-        
       </div>
 
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
         onUpdateUser={handleUpdateUser}
-        // name={"edit-profile"}
-        // title={"Редактировать профиль"}
-        // buttonText={"Сохранить"}
       />
 
-      <PopupWithForm
-        isOpen={isEditAvatarPopupOpen}
-        onClose={closeAllPopups}
-        name={"update-avatar"}
-        title={"Обновить аватар"}
-        buttonText={"Сохранить"}
-      >
-        <input
-          data-input="avatar-link-input"
-          type="url"
-          className="popup__input popup__input_type_avatar-link"
-          name="popup__input_type_avatar-link"
-          required
-          placeholder="Ссылка на новый аватар"
-        />
-        <span
-          className="popup__error"
-          data-input="avatar-link-input-error"
-        ></span>
-      </PopupWithForm>
-
-      <PopupWithForm
+      <AddPlacePopup
         isOpen={isAddPlacePopupOpen}
         onClose={closeAllPopups}
-        name={"add-element-card"}
-        title={"Новое место"}
-        buttonText={"Создать"}
-      >
-        <input
-          data-input="card-name-input"
-          type="text"
-          className="popup__input popup__input_type_card-name"
-          name="popup__input_type_card-name"
-          required
-          placeholder="Название"
-          minLength="2"
-          maxLength="30"
-        />
-        <span
-          className="popup__error"
-          data-input="card-name-input-error"
-        ></span>
-        <input
-          data-input="image-link-input"
-          type="url"
-          className="popup__input popup__input_type_image-link"
-          name="popup__input_type_image-link"
-          required
-          placeholder="Ссылка на картинку"
-        />
-        <span
-          className="popup__error"
-          data-input="image-link-input-error"
-        ></span>
-      </PopupWithForm>
+        onAddPlace={handleAddPlaceSubmit}
+      />
+
+      <EditAvatarPopup
+        isOpen={isEditAvatarPopupOpen}
+        onClose={closeAllPopups}
+        onUpdateAvatar={handleUpdateAvatar}
+      />
 
     <PopupWithForm
       isOpen={false}
