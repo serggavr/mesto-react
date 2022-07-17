@@ -1,18 +1,18 @@
 import React from 'react';
 
 export default function PopupWithForm({
-                                        name,
-                                        title,
-                                        isOpen,
-                                        onClose,
-                                        children,
-                                        buttonText,
-                                        onSubmit
-                                      }) {
+  name,
+  title,
+  isOpen,
+  onClose,
+  children,
+  buttonText,
+  onSubmit,
+  isFormValid
+}) {
 
 
   return (
-
       <div className={`popup popup_type_${name} ${isOpen && `popup_opened`}`}>
         <div className="popup__container">
           <button
@@ -32,7 +32,7 @@ export default function PopupWithForm({
 
             {children}
 
-            <input type="submit" className="popup__button" value={buttonText}/>
+            {buttonText ? (<input type="submit" className={`popup__button ${!isFormValid && `popup__button_disabled`}`} value={buttonText}/>) : (null)}
           </form>
         </div>
       </div>

@@ -9,7 +9,7 @@ export default function Main({
                 onCardClick,
                 cards,
                 onCardLike,
-                onCardDelete
+                onCardDeleteWithConfirmation,
               })
 {
 
@@ -52,7 +52,7 @@ export default function Main({
 
           {cards.map((card) => {
             return (
-                <Card card={card} key={card._id} onCardClick={onCardClick} onCardLike={onCardLike} onCardDelete={onCardDelete}/>
+                <Card card={card} key={card._id} onCardClick={onCardClick} onCardLike={onCardLike} onCardDeleteWithConfirmation={onCardDeleteWithConfirmation}/>
             )
           })}
 

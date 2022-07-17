@@ -5,7 +5,7 @@ export default function Card({
                 card,
                 onCardClick,
                 onCardLike,
-                onCardDelete
+                onCardDeleteWithConfirmation,
               })
 {
   
@@ -22,8 +22,8 @@ export default function Card({
     onCardLike(card)
   }
 
-  function handleDeleteCard() {
-    onCardDelete(card)
+  function handleDeleteCardWithConfirmation() {
+    onCardDeleteWithConfirmation(card)
   }
 
   React.useEffect(() => {
@@ -38,7 +38,7 @@ export default function Card({
         className="element__photo"
         onClick={handleClick}
       />
-      {isOwner ? (<button onClick={handleDeleteCard} className="element__delete-btn"></button>) : (null)}
+      {isOwner ? (<button onClick={handleDeleteCardWithConfirmation} className="element__delete-btn"></button>) : (null)}
       <div className="element__title-block">
         <h2 className="element__title">{card.name}</h2>
         <div className="element__likes-wrapper">
