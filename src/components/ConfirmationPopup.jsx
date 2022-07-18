@@ -16,8 +16,8 @@ function handleConfirmationDeleteCard(e) {
     <PopupWithForm
       isOpen={isOpen}
       onClose={onClose}
-      name={"confirm"}
-      title={"Вы уверены?"}
+      name="confirm"
+      title="Вы уверены?"
     >
       <input
         type="submit"

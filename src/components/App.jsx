@@ -32,10 +32,6 @@ React.useEffect(() => {
   .catch(err => console.log(err))
 },[])
 
-React.useEffect(() => {
-  setCards(cards)
-}, [cards] )
-
 function handleCardLike(card) {
   const isLiked = card.likes.some(like => like._id === currentUser._id);
   if (isLiked) {
@@ -95,17 +91,17 @@ function handleDeleteConfirmation(card) {
     setDeletedCard({})
   }
 
-  const handleCloseWithPushEscButton = (event) => {
+  const handleCloseWithPushEscButton = React.useCallback((event) => {
     if (event.keyCode === 27) {
       closeAllPopups()
     }
-  }
+  }, [])
 
-  const handleCloseWithClickOnOverlay = (event) => {
+  const handleCloseWithClickOnOverlay = React.useCallback((event) => {
     if (event.target.className.includes('popup_opened')) {
       closeAllPopups()
     }
-  }
+  }, [])
 
   const handleUpdateUser = (newUserData) => {
     Api.setUser({newName: newUserData.name, newAbout: newUserData.about})
@@ -135,12 +131,8 @@ function handleDeleteConfirmation(card) {
   }
 
   function handleValidation(inputEvent, validationErrorMessageContainer) {
-    validationErrorMessageContainer.current.textContent = inputEvent.target.validationMessage
-    if (validationErrorMessageContainer.current.textContent === '') {
-      inputEvent.target.classList.remove('popup__input_type_error')
-    } else {
-      inputEvent.target.classList.add('popup__input_type_error')
-    }
+    validationErrorMessageContainer.current.textContent = inputEvent.target.validationMessage;
+    return validationErrorMessageContainer.current.textContent ? false : true;
   }
 
   React.useEffect(() => {
@@ -152,11 +144,18 @@ function handleDeleteConfirmation(card) {
         document.removeEventListener('click', handleCloseWithClickOnOverlay)
       }
     }
-  })
+  }, [isEditProfilePopupOpen,
+      isAddPlacePopupOpen,
+      isEditAvatarPopupOpen,
+      isConfirmationPopupOpen,
+      selectedCard.link,
+      handleCloseWithClickOnOverlay,
+      handleCloseWithPushEscButton,
+    ])
 
  
   return (
-    <div className="body">
+    <>
       <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header />
@@ -183,6 +182,7 @@ function handleDeleteConfirmation(card) {
         isOpen={isAddPlacePopupOpen}
         onClose={closeAllPopups}
         onAddPlace={handleAddPlaceSubmit}
+        onValidation={handleValidation}
       />
 
       <EditAvatarPopup
@@ -202,6 +202,6 @@ function handleDeleteConfirmation(card) {
       onClose={closeAllPopups}
     />
     </CurrentUserContext.Provider>
-  </div>
+  </>
   );
 }

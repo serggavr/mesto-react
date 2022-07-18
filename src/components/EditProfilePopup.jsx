@@ -10,25 +10,26 @@ export default function EditProfilePopup({
 }) {
 
 const currentUser = React.useContext(CurrentUserContext)
-const [name, setName] = React.useState(currentUser.name);
-const [description, setDescription] = React.useState(currentUser.about);
-
-const nameInput = React.useRef({})
-const descriptionInput = React.useRef({})
-const nameErrorContainer = React.useRef({})
-const descriptionErrorContainer = React.useRef({})
 const [formValid, setFormValid] = React.useState(true)
-
 const [submitButtonText, setSubmitButtonText] = React.useState("Сохранить")
+
+const [name, setName] = React.useState(currentUser.name);
+const [nameInputValid, setNameInputValid] = React.useState(true)
+const nameErrorContainer = React.useRef({})
+
+const [description, setDescription] = React.useState(currentUser.about);
+const [descriptionInputValid, setDescriptionInputValid] = React.useState(true)
+const descriptionErrorContainer = React.useRef({})
+
 
 function changeName(e) {
   setName(e.target.value);
-  onValidation(e, nameErrorContainer)
+  setNameInputValid(onValidation(e, nameErrorContainer))
 }
 
 function changeDescription(e) {
   setDescription(e.target.value);
-  onValidation(e, descriptionErrorContainer)
+  setDescriptionInputValid(onValidation(e, descriptionErrorContainer))
 }
 
 function handleSubmit(e) {
@@ -44,36 +45,32 @@ React.useEffect(() => {
   setTimeout(() => {
     setName(currentUser.name)
     setDescription(currentUser.about)
+    setNameInputValid(true)
+    setDescriptionInputValid(true)
     nameErrorContainer.current.textContent = ''
     descriptionErrorContainer.current.textContent = ''
-    nameInput.current.classList.remove('popup__input_type_error')
-    descriptionInput.current.classList.remove('popup__input_type_error')
     setSubmitButtonText("Сохранить")
   }, 500)
-}, [currentUser.name, currentUser.about, onClose])
+}, [currentUser, onClose])
 
 React.useEffect(() => {
-  if (nameErrorContainer.current.textContent !== '' || descriptionErrorContainer.current.textContent !== '') {
-    setFormValid(false)
-  } else {
-    setFormValid(true)
-  }
-}, [nameErrorContainer.current.textContent, descriptionErrorContainer.current.textContent])
+  !nameInputValid || !descriptionInputValid ? setFormValid(false) : setFormValid(true)
+}, [nameInputValid, descriptionInputValid])
 
   return (
     <PopupWithForm
         isOpen={isOpen}
         onClose={onClose}
         onSubmit={handleSubmit}
-        name={"edit-profile"}
-        title={"Редактировать профиль"}
+        name="edit-profile"
+        title="Редактировать профиль"
         buttonText={submitButtonText}
         isFormValid={formValid}
       >
         <input
           data-input="name-input"
           type="text"
-          className="popup__input popup__input_type_username"
+          className={ `popup__input popup__input_type_username ${!nameInputValid && `popup__input_type_error`}` }
           name="popup__input_type_username"
           required
           placeholder="Имя"
@@ -81,17 +78,16 @@ React.useEffect(() => {
           maxLength="40"
           onChange={changeName}
           value={name ?? ''}
-          ref={nameInput}
         />
         <span
-          className="popup__error popup__error_visible"
+          className={`popup__error ${!nameInputValid && `popup__error_visible`}`}
           data-input="name-input-error"
           ref={nameErrorContainer}
         ></span>
         <input
           data-input="description-input"
           type="text"
-          className="popup__input popup__input_type_description"
+          className={`popup__input popup__input_type_description ${!descriptionInputValid && `popup__input_type_error`}`}
           name="popup__input_type_description"
           required
           placeholder="О себе"
@@ -99,10 +95,9 @@ React.useEffect(() => {
           maxLength="200"
           onChange={changeDescription}
           value={description ?? ''}
-          ref={descriptionInput}
         />
         <span
-          className="popup__error popup__error_visible"
+          className={`popup__error ${!descriptionInputValid && `popup__error_visible`}`}
           data-input="description-input-error"
           ref={descriptionErrorContainer}
         ></span>

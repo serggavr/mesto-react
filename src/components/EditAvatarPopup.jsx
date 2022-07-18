@@ -4,29 +4,37 @@ import PopupWithForm from './PopupWithForm';
 export default function EditAvatarPopup({
   isOpen,
   onClose,
-  onUpdateAvatar
+  onUpdateAvatar,
 }) {
-
+  const [submitButtonText, setSubmitButtonText] = React.useState("Создать")
   const userAvatarSrc = React.useRef({})
-  userAvatarSrc.current.value = ''
 
-  function handleSubmit(e) {
+  const handleSubmit = React.useCallback((e) => {
     e.preventDefault()
+    setSubmitButtonText("Сохранение...")
     onUpdateAvatar(userAvatarSrc.current.value)
-  }
+  }, [onUpdateAvatar])
 
   function changeAvatarSrc(e) {
-    userAvatarSrc.current.value = e.target.value
+    userAvatarSrc.current.value = e.target.value 
   }
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setSubmitButtonText("Создать")
+      userAvatarSrc.current.value = ''
+    }, 1000)
+  }, [handleSubmit] )
 
   return (
     <PopupWithForm
         isOpen={isOpen}
         onClose={onClose}
         onSubmit={handleSubmit}
-        name={"update-avatar"}
-        title={"Обновить аватар"}
-        buttonText={"Сохранить"}
+        name="update-avatar"
+        title="Обновить аватар"
+        buttonText={submitButtonText}
+        isFormValid={true}
       >
         <input
           data-input="avatar-link-input"
