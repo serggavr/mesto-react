@@ -25,6 +25,10 @@ const descriptionErrorContainer = React.useRef({})
 function changeName(e) {
   setName(e.target.value);
   setNameInputValid(onValidation(e, nameErrorContainer))
+
+  // setNameInputValid(true)
+  // onValidation(e, nameErrorContainer)
+  
 }
 
 function changeDescription(e) {

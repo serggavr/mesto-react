@@ -15,10 +15,6 @@ export default function EditAvatarPopup({
     onUpdateAvatar(userAvatarSrc.current.value)
   }, [onUpdateAvatar])
 
-  function changeAvatarSrc(e) {
-    userAvatarSrc.current.value = e.target.value 
-  }
-
   React.useEffect(() => {
     setTimeout(() => {
       setSubmitButtonText("Создать")
@@ -43,7 +39,6 @@ export default function EditAvatarPopup({
           name="popup__input_type_avatar-link"
           required
           placeholder="Ссылка на новый аватар"
-          onChange={changeAvatarSrc}
           ref={userAvatarSrc}
         />
         <span

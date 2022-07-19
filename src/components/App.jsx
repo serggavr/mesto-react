@@ -134,6 +134,16 @@ function handleDeleteConfirmation(card) {
     validationErrorMessageContainer.current.textContent = inputEvent.target.validationMessage;
     return validationErrorMessageContainer.current.textContent ? false : true;
   }
+//   const [validInputs, setValidInputs] = React.useState({})
+
+//   function handleValidation(inputEvent, validationErrorMessageContainer) {
+//     validationErrorMessageContainer.current.textContent = inputEvent.target.validationMessage;
+
+// setValidInputs({...validInputs, [inputEvent.target.dataset.input]: inputEvent.target.validationMessage})
+// console.log(validInputs)
+
+//     // return validationErrorMessageContainer.current.textContent ? false : true;
+  // }
 
   React.useEffect(() => {
     if (isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen || isConfirmationPopupOpen || selectedCard.link) {
