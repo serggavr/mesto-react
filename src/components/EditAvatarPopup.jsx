@@ -5,9 +5,13 @@ export default function EditAvatarPopup({
   isOpen,
   onClose,
   onUpdateAvatar,
+  useValidation
 }) {
+  const [formValid, setFormValid] = React.useState(false)
   const [submitButtonText, setSubmitButtonText] = React.useState("Создать")
   const userAvatarSrc = React.useRef({})
+
+  const {validationMessage: userAvatarSrcErrorMessage, isValid: userAvatarSrcValid, onChange: validateUserAvatarSrc , resetError: resetUserAvatarSrcError} = useValidation({})
 
   const handleSubmit = React.useCallback((e) => {
     e.preventDefault()
@@ -19,8 +23,17 @@ export default function EditAvatarPopup({
     setTimeout(() => {
       setSubmitButtonText("Создать")
       userAvatarSrc.current.value = ''
+      resetUserAvatarSrcError()
     }, 1000)
   }, [handleSubmit] )
+
+  React.useEffect(() => {
+    setFormValid(false)
+  }, [isOpen])
+
+  React.useEffect(() => {
+    !userAvatarSrcValid ? setFormValid(false) : setFormValid(true)
+  }, [userAvatarSrcValid])
 
   return (
     <PopupWithForm
@@ -30,21 +43,22 @@ export default function EditAvatarPopup({
         name="update-avatar"
         title="Обновить аватар"
         buttonText={submitButtonText}
-        isFormValid={true}
+        isFormValid={formValid}
       >
         <input
           data-input="avatar-link-input"
           type="url"
-          className="popup__input popup__input_type_avatar-link"
+          className={`popup__input popup__input_type_avatar-link ${!userAvatarSrcValid && `popup__input_type_error`}`}
           name="popup__input_type_avatar-link"
           required
           placeholder="Ссылка на новый аватар"
+          onChange={validateUserAvatarSrc}
           ref={userAvatarSrc}
         />
         <span
-          className="popup__error"
+          className={`popup__error ${!userAvatarSrcValid && `popup__error_visible`}`}
           data-input="avatar-link-input-error"
-        ></span>
+        >{userAvatarSrcErrorMessage}</span>
       </PopupWithForm>
   );
 }

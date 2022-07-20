@@ -5,36 +5,32 @@ export default function AddPlacePopup({
   isOpen,
   onClose,
   onAddPlace,
-  onValidation
+  useValidation
 }) {
 
-  const [formValid, setFormValid] = React.useState(false)
+  const [formValid, setFormValid] = React.useState(true)
   const [submitButtonText, setSubmitButtonText] = React.useState("Создать")
 
   const [newPlaceName, setNewPlaceName] = React.useState(null);
-  const [newPlaceNameInputValid, setNewPlaceNameInputValid] = React.useState(true)
-  const newPlaceNameErrorContainer = React.useRef({})
-
   const [newPlaceImageSrc, setNewPlaceImageSrc] = React.useState(null);
-  const [newPlaceImageSrcInputValid, setNewPlaceImageSrcInputValid] = React.useState(true)
-  const newPlaceImageSrcErrorContainer = React.useRef({})
 
+  const {validationMessage: newPlaceNameErrorMessage, isValid: newPlaceNameValid, onChange: validateNewPlaceName , resetError: resetNewPlaceNameError} = useValidation({})
+  const {validationMessage: newPlaceImageSrcErrorMessage, isValid: newPlaceImageSrcValid, onChange: validateNewPlaceImageSrc, resetError: resetNewPlaceImageSrcError } = useValidation({})
+
+  function changeNewPlaceName(e) {
+    setNewPlaceName(e.target.value)
+    validateNewPlaceName(e)
+  }
+
+  function changeNewPlaceImageSrc(e) {
+    setNewPlaceImageSrc(e.target.value)
+    validateNewPlaceImageSrc(e)
+  }
 
   function handleSubmit(e) {
     e.preventDefault()
     setSubmitButtonText("Сохранение...")
     onAddPlace({cardName: newPlaceName, cardLink: newPlaceImageSrc})
-  }
-
-  function changeNewPlaceName(e) {
-    setNewPlaceName(e.target.value)
-    setNewPlaceNameInputValid(onValidation(e, newPlaceNameErrorContainer))
-    console.log(newPlaceNameErrorContainer.current.textContent)
-  }
-
-  function changeNewPlaceImageSrc(e) {
-    setNewPlaceImageSrc(e.target.value)
-    setNewPlaceImageSrcInputValid(onValidation(e, newPlaceImageSrcErrorContainer))
   }
 
   React.useEffect(() => {
@@ -43,16 +39,14 @@ export default function AddPlacePopup({
       setFormValid(false)
       setNewPlaceName('')
       setNewPlaceImageSrc('')
-      setNewPlaceNameInputValid(true)
-      setNewPlaceImageSrcInputValid(true)
-      newPlaceNameErrorContainer.current.textContent = ''
-      newPlaceImageSrcErrorContainer.current.textContent = ''
+      resetNewPlaceNameError()
+      resetNewPlaceImageSrcError()
     }, 500)
   }, [onClose])
 
   React.useEffect(() => {
-    !newPlaceNameInputValid || !newPlaceImageSrcInputValid ? setFormValid(false) : setFormValid(true)
-  }, [newPlaceNameInputValid, newPlaceImageSrcInputValid])
+    !newPlaceNameValid || !newPlaceImageSrcValid ? setFormValid(false) : setFormValid(true)
+  }, [newPlaceNameValid, newPlaceImageSrcValid])
 
   return (
     <PopupWithForm
@@ -67,7 +61,7 @@ export default function AddPlacePopup({
     <input
       data-input="card-name-input"
       type="text"
-      className={`popup__input popup__input_type_card-name ${!newPlaceNameInputValid && `popup__input_type_error`}`}
+      className={`popup__input popup__input_type_card-name ${!newPlaceNameValid && `popup__input_type_error`}`}
       name="popup__input_type_card-name"
       required
       placeholder="Название"
@@ -77,14 +71,13 @@ export default function AddPlacePopup({
       value={newPlaceName ?? ''}
     />
     <span
-      className={`popup__error ${!newPlaceNameInputValid && `popup__error_visible`}`}
+      className={`popup__error ${!newPlaceNameValid && `popup__error_visible`}`}
       data-input="card-name-input-error"
-      ref={newPlaceNameErrorContainer}
-    ></span>
+    >{newPlaceNameErrorMessage}</span>
     <input
       data-input="image-link-input"
       type="url"
-      className={`popup__input popup__input_type_image-link ${!newPlaceImageSrcInputValid && `popup__input_type_error`}`}
+      className={`popup__input popup__input_type_image-link ${!newPlaceImageSrcValid && `popup__input_type_error`}`}
       name="popup__input_type_image-link"
       required
       placeholder="Ссылка на картинку"
@@ -92,10 +85,9 @@ export default function AddPlacePopup({
       value={newPlaceImageSrc ?? ''}
     />
     <span
-      className={`popup__error ${!newPlaceImageSrcInputValid && `popup__error_visible`}`}
+      className={`popup__error ${!newPlaceImageSrcValid && `popup__error_visible`}`}
       data-input="image-link-input-error"
-      ref={newPlaceImageSrcErrorContainer}
-    ></span>
+    >{newPlaceImageSrcErrorMessage}</span>
   </PopupWithForm>
   );
 }

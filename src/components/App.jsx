@@ -129,21 +129,29 @@ function handleDeleteConfirmation(card) {
     .then(res => closeAllPopups())
     .catch(err => console.log(err))
   }
-
-  function handleValidation(inputEvent, validationErrorMessageContainer) {
-    validationErrorMessageContainer.current.textContent = inputEvent.target.validationMessage;
-    return validationErrorMessageContainer.current.textContent ? false : true;
+  
+  const useValidation = () => {
+    const [validationMessage, setValidationMessage] = React.useState('')
+    const [isValid, setIsValid] = React.useState(false)
+    const onChange = (e) => {
+      if (e.target.validationMessage) {
+        setValidationMessage(e.target.validationMessage)
+        setIsValid(false)
+      } else {
+        setIsValid(true)
+      }
+    }
+    const resetError = () => {
+      setValidationMessage('')
+      setIsValid(true)
+    }
+    return {
+      validationMessage,
+      isValid,
+      onChange,
+      resetError
+    }
   }
-//   const [validInputs, setValidInputs] = React.useState({})
-
-//   function handleValidation(inputEvent, validationErrorMessageContainer) {
-//     validationErrorMessageContainer.current.textContent = inputEvent.target.validationMessage;
-
-// setValidInputs({...validInputs, [inputEvent.target.dataset.input]: inputEvent.target.validationMessage})
-// console.log(validInputs)
-
-//     // return validationErrorMessageContainer.current.textContent ? false : true;
-  // }
 
   React.useEffect(() => {
     if (isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen || isConfirmationPopupOpen || selectedCard.link) {
@@ -185,20 +193,21 @@ function handleDeleteConfirmation(card) {
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
         onUpdateUser={handleUpdateUser}
-        onValidation={handleValidation}
+        useValidation={useValidation}
       />
 
       <AddPlacePopup
         isOpen={isAddPlacePopupOpen}
         onClose={closeAllPopups}
         onAddPlace={handleAddPlaceSubmit}
-        onValidation={handleValidation}
+        useValidation={useValidation}
       />
 
       <EditAvatarPopup
         isOpen={isEditAvatarPopupOpen}
         onClose={closeAllPopups}
         onUpdateAvatar={handleUpdateAvatar}
+        useValidation={useValidation}
       />
 
       <ConfirmationPopup
