@@ -8,7 +8,7 @@ export default function AddPlacePopup({
   useValidation
 }) {
 
-  const [formValid, setFormValid] = React.useState(true)
+  const [formValid, setFormValid] = React.useState(false)
   const [submitButtonText, setSubmitButtonText] = React.useState("Создать")
 
   const [newPlaceName, setNewPlaceName] = React.useState(null);
@@ -45,8 +45,8 @@ export default function AddPlacePopup({
   }, [onClose])
 
   React.useEffect(() => {
-    !newPlaceNameValid || !newPlaceImageSrcValid ? setFormValid(false) : setFormValid(true)
-  }, [newPlaceNameValid, newPlaceImageSrcValid])
+    !newPlaceNameValid || !newPlaceImageSrcValid || newPlaceName === '' || newPlaceImageSrc === '' ? setFormValid(false) : setFormValid(true)
+  }, [newPlaceNameValid, newPlaceImageSrcValid, newPlaceName, newPlaceImageSrc])
 
   return (
     <PopupWithForm

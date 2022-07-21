@@ -50,7 +50,6 @@ function handleCardLike(card) {
 }
 
 function handleDeleteConfirmation(card) {
-  console.log(card)
   Api.deleteCard(card._id)
   .then(res => {
     setCards((state) => state.filter((c) => c._id !== card._id))
@@ -132,7 +131,7 @@ function handleDeleteConfirmation(card) {
   
   const useValidation = () => {
     const [validationMessage, setValidationMessage] = React.useState('')
-    const [isValid, setIsValid] = React.useState(false)
+    const [isValid, setIsValid] = React.useState(true)
     const onChange = (e) => {
       if (e.target.validationMessage) {
         setValidationMessage(e.target.validationMessage)

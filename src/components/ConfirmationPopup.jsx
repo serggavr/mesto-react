@@ -7,10 +7,19 @@ export default function ConfirmationPopup({
   onConfirmDeleteCard
 }) {
 
-function handleConfirmationDeleteCard(e) {
-  e.preventDefault()
-  onConfirmDeleteCard()
-}
+  const [submitButtonText, setSubmitButtonText] = React.useState("Дa")
+
+  function handleConfirmationDeleteCard(e) {
+    e.preventDefault()
+    setSubmitButtonText("Удаление...")
+    onConfirmDeleteCard()
+  }
+  
+  React.useEffect(() => {
+    setTimeout(() => {
+      setSubmitButtonText("Да")
+    }, 500)
+  }, [onClose])
 
   return (
     <PopupWithForm
@@ -18,11 +27,12 @@ function handleConfirmationDeleteCard(e) {
       onClose={onClose}
       name="confirm"
       title="Вы уверены?"
+      isFormValid={true}
     >
       <input
         type="submit"
         className="popup__button popup__button_placed_submit-form"
-        value="Да"
+        value={submitButtonText}
         onClick={handleConfirmationDeleteCard}
       />
     </PopupWithForm>
