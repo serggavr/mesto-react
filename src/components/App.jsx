@@ -172,8 +172,8 @@ function handleDeleteConfirmation(card) {
 
  
   return (
-    <>
-      <CurrentUserContext.Provider value={currentUser}>
+    
+    <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header />
         <Main
@@ -215,11 +215,10 @@ function handleDeleteConfirmation(card) {
         onConfirmDeleteCard={() => handleDeleteConfirmation(deletedCard)}
       />
 
-    <ImagePopup
-      card={selectedCard}
-      onClose={closeAllPopups}
-    />
+      <ImagePopup
+        card={selectedCard}
+        onClose={closeAllPopups}
+      />
     </CurrentUserContext.Provider>
-  </>
   );
 }

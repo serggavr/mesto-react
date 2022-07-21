@@ -33,7 +33,7 @@ export default function EditAvatarPopup({
 
   React.useEffect(() => {
     !userAvatarSrcValid ? setFormValid(false) : setFormValid(true)
-  }, [userAvatarSrcValid])
+  }, [userAvatarSrcValid, validateUserAvatarSrc])
 
   return (
     <PopupWithForm
@@ -53,6 +53,7 @@ export default function EditAvatarPopup({
           required
           placeholder="Ссылка на новый аватар"
           onChange={validateUserAvatarSrc}
+          onFocus={validateUserAvatarSrc}
           ref={userAvatarSrc}
         />
         <span
