@@ -27,13 +27,15 @@ export default function EditAvatarPopup({
     }, 1000)
   }, [handleSubmit] )
 
+
+  React.useEffect(() => {
+    !userAvatarSrcValid || userAvatarSrc.current.value === '' ?  setFormValid(false) : setFormValid(true)
+  }, [userAvatarSrcValid, validateUserAvatarSrc, userAvatarSrc.current.value])
+
   React.useEffect(() => {
     setFormValid(false)
   }, [isOpen])
 
-  React.useEffect(() => {
-    !userAvatarSrcValid ? setFormValid(false) : setFormValid(true)
-  }, [userAvatarSrcValid, validateUserAvatarSrc])
 
   return (
     <PopupWithForm
